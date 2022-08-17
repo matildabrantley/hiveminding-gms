@@ -1,5 +1,5 @@
 {
-  "name": "Object1",
+  "name": "Agent",
   "spriteId": null,
   "spriteMaskId": null,
   "visible": true,

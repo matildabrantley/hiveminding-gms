@@ -1,6 +1,8 @@
 {
   "resources": [
-    {"id":{"name":"Object1","path":"objects/Object1/Object1.yy",},"order":0,},
+    {"id":{"name":"field1","path":"sprites/field1/field1.yy",},"order":1,},
+    {"id":{"name":"Colony","path":"objects/Colony/Colony.yy",},"order":1,},
+    {"id":{"name":"Agent","path":"objects/Agent/Agent.yy",},"order":0,},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},"order":0,},
   ],
   "Options": [
