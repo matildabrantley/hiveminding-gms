@@ -1,9 +1,11 @@
-/// @description Insert description here
-// You can write your code in this editor
+var swarmX = random(0.4) - 0.2;
+var swarmY = random(1) - 0.5;
 for (var i = 0; i < pop; i++){
-	colony[i]
-	colony[i].image_xscale = 0.1;
-	colony[i].image_yscale = 0.1;
+	colony[i].hspeed += swarmX + random(0.2) - 0.1;
+	colony[i].vspeed += swarmY + random(0.2) - 0.1;
+	
+	colony[i].hspeed += (hspeed - colony[i].hspeed) / 10;
+	colony[i].vspeed += (vspeed - colony[i].vspeed) / 10;
 }
 
 
