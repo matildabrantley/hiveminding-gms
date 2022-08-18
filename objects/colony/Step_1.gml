@@ -4,7 +4,6 @@ var totalY = 0;
 var totalHSpeed = 0;
 var totalYSpeed = 0;
 
-
 for (var i = 0; i < pop; i++){
 	totalX += colony[i].x; 
 	totalY += colony[i].y; 
