@@ -1,5 +1,6 @@
 {
   "resources": [
+    {"id":{"name":"bee","path":"sprites/bee/bee.yy",},"order":2,},
     {"id":{"name":"field1","path":"sprites/field1/field1.yy",},"order":1,},
     {"id":{"name":"Colony","path":"objects/Colony/Colony.yy",},"order":1,},
     {"id":{"name":"Agent","path":"objects/Agent/Agent.yy",},"order":0,},
