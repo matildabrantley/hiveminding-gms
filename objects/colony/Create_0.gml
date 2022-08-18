@@ -1,6 +1,6 @@
 /// @description Insert description here
 // You can write your code in this editor
-pop = 30;
+pop = 3000;
 colony = [];
 
 for (var i = 0; i < pop; i++){
