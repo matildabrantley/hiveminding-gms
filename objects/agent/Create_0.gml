@@ -1,7 +1,10 @@
-/// @description Insert description here
-// You can write your code in this editor
-
-
+//neural net struct
+net = {
+	isRecurrent : false,
+	layerSizes : [3, 3]
+	weights : [],
+	activate : function (input) {}
+}
 
 
 
