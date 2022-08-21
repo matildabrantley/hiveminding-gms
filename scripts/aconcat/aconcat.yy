@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Scripts",
-    "path": "folders/Scripts.yy",
+    "name": "array",
+    "path": "folders/Scripts/array.yy",
   },
   "resourceVersion": "1.0",
-  "name": "array_fill",
+  "name": "aconcat",
   "tags": [],
   "resourceType": "GMScript",
 }
