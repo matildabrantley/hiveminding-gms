@@ -28,7 +28,7 @@ Net = function(_isRecurrent = false, _layerSizes)constructor {
 			//connections to previous layer
 			weights[layer][neuron] = create_array(layerSizes[layer + 1])
 			for (var w = 0; w < layerSizes[layer + 1]; w++)
-				weights[layer][neuron][w] = 0; //TODO: random zero centered inital values;
+				weights[layer][neuron][w] = randZeroCentered();
 		}
 	}
 	
@@ -50,10 +50,18 @@ Net = function(_isRecurrent = false, _layerSizes)constructor {
 			}
 			//activation function on next layer's neurons after they're all charged up
 			for (var neuron = 0; neuron <  array_length(charges[nextLayer]); neuron++) 
-				charges[nextLayer][neuron] = 0;//todo: zeroCenteredCurve(charges[nextLayer][neuron]);
+				charges[nextLayer][neuron] = zeroCenteredCurve(charges[nextLayer][neuron]);
 		}
 		
 		
+	}
+	
+	static zeroCenteredCurve = function(x, base = 10) {
+		return (2 / (1 + power(base, -x)) - 1);
+	}
+	
+	static randZeroCentered = function(scale=1) {
+		return ((random(1) * 2 - 1) * scale);
 	}
 }
 
