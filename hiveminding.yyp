@@ -5,6 +5,8 @@
     {"id":{"name":"field1","path":"sprites/field1/field1.yy",},"order":1,},
     {"id":{"name":"Colony","path":"objects/Colony/Colony.yy",},"order":1,},
     {"id":{"name":"logo","path":"sprites/logo/logo.yy",},"order":3,},
+    {"id":{"name":"array_fill","path":"scripts/array_fill/array_fill.yy",},"order":1,},
+    {"id":{"name":"array_concat","path":"scripts/array_concat/array_concat.yy",},"order":0,},
     {"id":{"name":"Agent","path":"objects/Agent/Agent.yy",},"order":0,},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},"order":0,},
   ],

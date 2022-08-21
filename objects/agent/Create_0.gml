@@ -1,5 +1,5 @@
 //neural net struct
-Net = function(_isRecurrent = false, _layerSizes)constructor {
+Net = function(_isRecurrent = false, isMediumTerm = false, _layerSizes)constructor {
 	
 	isRecurrent = _isRecurrent; //"short term" memory
 	layerSizes = array_copy(_layerSizes);
@@ -8,6 +8,17 @@ Net = function(_isRecurrent = false, _layerSizes)constructor {
 	
 	var outputLayer = numOutputs - 1;
 	var numOutputs = layerSizes[array_length(layerSizes) - 1];	
+	
+	if (isRecurrent){
+		//Inputs receive outputs of previous activation
+		layerSizes[0] += numOutputs;
+		shortMemory = array_fill(array_create(numOutputs), 0);
+	}
+	//Long-term Memory
+	if (isMediumTerm){
+		layerSizes[0] += numOutputs;
+		longMemory =  array_fill(array_create(numOutputs), 0);
+	}
 	
 	charges = create_array(array_length(layerSizes));
 	for (var layer = 0; layer < array_length(layerSizes); layer++)
@@ -36,7 +47,11 @@ Net = function(_isRecurrent = false, _layerSizes)constructor {
 		resetCharges();
 		charges[0] = input; //set first layer to incoming input array
 		
-		//TODO: memory systems can be added to input layer here
+		//each memory system fed into network here
+		if (shortMemory)
+			array_concat(charges[0], shortMemory);
+		if (mediumMemory)
+			array_concat(charges[0], mediumMemory);
 		
 		//charges propagate forward
 		var nextLayer = 1;
