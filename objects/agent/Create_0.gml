@@ -1,7 +1,7 @@
 //neural net struct
 Net = function(_isRecurrent = false, _layerSizes)constructor {
 	
-	isRecurrent = _isRecurrent;
+	isRecurrent = _isRecurrent; //"short term" memory
 	layerSizes = array_copy(_layerSizes);
 	weights = [[[]]];
 	threshold = 0.0; //net-wide neutral threshold for now
@@ -33,16 +33,18 @@ Net = function(_isRecurrent = false, _layerSizes)constructor {
 	}
 	
 	static activate = function (input = []) {
+		resetCharges();
 		charges[0] = input; //set first layer to incoming input array
 		
 		//TODO: memory systems can be added to input layer here
 		
 		//charges propagate forward
-		for (var layer = 0, nextLayer = 1; layer < outputLayer; layer++, nextLayer++) {
+		var nextLayer = 1;
+		for (var layer = 0; layer < outputLayer; layer++) {
 			//each neuron
 			for (var neuron = 0; neuron < array_length(charges[layer]); neuron++) {
 				//absolute value of charge checked against a standard threshold
-				if (layer === 0 || Math.abs(charges[layer][neuron]) > threshold) {
+				if (layer == 0 || abs(charges[layer][neuron]) > threshold) {
 					//each weight
 					for (var w = 0; w <  array_length(charges[nextLayer]); w++)
 						charges[nextLayer][w] += charges[layer][neuron] * weights[layer][neuron][w];
@@ -51,9 +53,16 @@ Net = function(_isRecurrent = false, _layerSizes)constructor {
 			//activation function on next layer's neurons after they're all charged up
 			for (var neuron = 0; neuron <  array_length(charges[nextLayer]); neuron++) 
 				charges[nextLayer][neuron] = zeroCenteredCurve(charges[nextLayer][neuron]);
+			nextLayer++;
 		}
 		
 		
+	}
+	
+	static resetCharges = function() {
+		for (var layer = 1; layer < array_length(charges); layer++)
+			for (var neuron = 0; neuron <  array_length(charges[layer]); neuron++)
+				charges[layer][neuron] = 0;
 	}
 	
 	static zeroCenteredCurve = function(x, base = 10) {
