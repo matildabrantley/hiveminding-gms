@@ -2,48 +2,48 @@
 function Net(_isRecurrent = false, isMediumTerm = false, _layerSizes) constructor {
 	
 	isRecurrent = _isRecurrent; //"short term" memory
-	layerSizes = [];
-	array_copy(layerSizes, _layerSizes);
+	isMediumTerm = _isRecurrent; //"short term" memory
+	layerSizes = acopy(_layerSizes);
 	weights = [[[]]];
 	threshold = 0.0; //net-wide neutral threshold for now
 	
-	var outputLayer = numOutputs - 1;
 	var numOutputs = layerSizes[array_length(layerSizes) - 1];	
+	outputLayer = numOutputs - 1;
 	
 	if (isRecurrent){
 		//Inputs receive outputs of previous activation
 		layerSizes[0] += numOutputs;
-		shortMemory = array_fill(array_create(numOutputs), 0);
+		shortMemory = afill(array_create(numOutputs), 0);
 	}
 	//Medium-term Memory
 	if (isMediumTerm){
 		layerSizes[0] += numOutputs;
-		mediumMemory =  array_fill(array_create(numOutputs), 0);
+		mediumMemory =  afill(array_create(numOutputs), 0);
 	}
 	
 	//TODO: Long-term memory will dynamic random access memory,
 	//      implemented with n-dimensional arrays
 	
-	charges = create_array(array_length(layerSizes));
-	for (var layer = 0; layer < array_length(layerSizes); layer++)
+	charges = array_create(array_length(layerSizes));
+	for (var lay = 0; lay < array_length(layerSizes); lay++)
 	{
-		charges[layer] = create_array(layerSizes[layer]);
-		for (var neuron = 0; neuron < layerSizes[layer]; neuron++)
-			charges[layer][neuron] = 0;
+		charges[lay] = array_create(layerSizes[lay]);
+		for (var neuron = 0; neuron < layerSizes[lay]; neuron++)
+			charges[lay][neuron] = 0;
 	}
 	
 	//fully interconnected random weights 
-	weights = create_array(array_length(layerSizes) - 1);
-	for (var layer = 0; layer < weights.length; layer++)
+	weights = array_create(array_length(layerSizes) - 1);
+	for (var lay = 0; lay < array_length(weights); lay++)
 	{
 		//initialize all weights to random values
-		weights[layer] = create_array(layerSizes[layer]);
-		for (var neuron = 0; neuron < layerSizes[layer]; neuron++)
+		weights[lay] = array_create(layerSizes[lay]);
+		for (var neuron = 0; neuron < layerSizes[lay]; neuron++)
 		{
 			//connections to previous layer
-			weights[layer][neuron] = create_array(layerSizes[layer + 1])
-			for (var w = 0; w < layerSizes[layer + 1]; w++)
-				weights[layer][neuron][w] = randZeroCentered();
+			weights[lay][neuron] = array_create(layerSizes[lay + 1])
+			for (var w = 0; w < layerSizes[lay + 1]; w++)
+				weights[lay][neuron][w] = randZeroCentered();
 		}
 	}
 	
@@ -52,21 +52,21 @@ function Net(_isRecurrent = false, isMediumTerm = false, _layerSizes) constructo
 		charges[0] = input; //set first layer to incoming input array
 		
 		//each memory system fed into network here
-		if (shortMemory)
-			array_concat(charges[0], shortMemory);
-		if (mediumMemory)
-			array_concat(charges[0], mediumMemory);
+		if (isRecurrent)
+			aconcat(charges[0], shortMemory);
+	//	if (isMediumMemory)
+	//		aconcat(charges[0], mediumMemory);
 		
 		//charges propagate forward
 		var nextLayer = 1;
-		for (var layer = 0; layer < outputLayer; layer++) {
+		for (var lay = 0; lay < outputLayer; lay++) {
 			//each neuron
-			for (var neuron = 0; neuron < array_length(charges[layer]); neuron++) {
+			for (var neuron = 0; neuron < array_length(charges[lay]); neuron++) {
 				//absolute value of charge checked against a standard threshold
-				if (layer == 0 || abs(charges[layer][neuron]) > threshold) {
+				if (lay == 0 || abs(charges[lay][neuron]) > threshold) {
 					//each weight
 					for (var w = 0; w <  array_length(charges[nextLayer]); w++)
-						charges[nextLayer][w] += charges[layer][neuron] * weights[layer][neuron][w];
+						charges[nextLayer][w] += charges[lay][neuron] * weights[lay][neuron][w];
 				}
 			}
 			//activation function on next layer's neurons after they're all charged up
@@ -75,13 +75,23 @@ function Net(_isRecurrent = false, isMediumTerm = false, _layerSizes) constructo
 			nextLayer++;
 		}
 		
+		//width of final output layer
+		var numOutputs = array_length(charges[outputLayer]);
+
+		//squish outputs with sigmoid
+		for (var neuron = 0; neuron < numOutputs; neuron++)
+			charges[outputLayer][neuron] = zeroCenteredCurve(charges[outputLayer][neuron]);
+
+		//short-term recurrent memory saved here
+		if (isRecurrent)
+			shortMemory = acopy(charges[outputLayer]);
 		
 	}
 	
 	static resetCharges = function() {
-		for (var layer = 1; layer < array_length(charges); layer++)
-			for (var neuron = 0; neuron <  array_length(charges[layer]); neuron++)
-				charges[layer][neuron] = 0;
+		for (var lay = 1; lay < array_length(charges); lay++)
+			for (var neuron = 0; neuron <  array_length(charges[lay]); neuron++)
+				charges[lay][neuron] = 0;
 	}
 	
 	static zeroCenteredCurve = function(x, base = 10) {
